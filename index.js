@@ -9,11 +9,35 @@ const engineer = require('./lib/engineer');
 const intern = require('./lib/intern');
 const manager = require('./lib/manager');
 
+const employees = [];
+
 const writeFileAsync = util.promisify(fs.writeFile);
 
 const promptUser = () => {
     return inquirer.prompt([
-    //License choices
+
+    //Employee name
+    {
+        name: 'name',
+        type: 'input',
+        message: 'Enter the employee\'s name',
+    },
+    
+    //Employee email
+    {
+        name: 'email',
+        type: 'input',
+        message: 'Enter the employee\'s email',
+    }, 
+
+    //Employee id
+    {
+        name: 'id',
+        type: 'input',
+        message: 'Enter the employee\'s id',
+    }, 
+
+    //Employee choices
     {
         name: 'employeeType',
         type: 'list',
@@ -25,7 +49,7 @@ const promptUser = () => {
 };
 
 function setEmployeeType(answers) {
-    let link = ""; //will change to swith statement later
+    let link = "";
     if (answers.employeeType ==="Engineer") {
         //
     } else if (answers.employeeType === "Intern") {
