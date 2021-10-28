@@ -21,6 +21,13 @@ const promptUser = () => {
         name: 'name',
         type: 'input',
         message: 'Enter the employee\'s name',
+        validate: function(name) {
+            if (name) {
+              return true;
+            } else {
+              return 'Please enter the employee\'s name';
+            }
+        }
     },
     
     //Employee email
@@ -28,13 +35,28 @@ const promptUser = () => {
         name: 'email',
         type: 'input',
         message: 'Enter the employee\'s email',
+        validate: function(email) {
+            let test = email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/); //regex from https://www.w3resource.com/javascript/form/email-validation.php
+            if (test) {
+              return true;
+            } else {
+              return 'Please enter a valid email address.';
+            }
+        }
     }, 
 
     //Employee id
     {
         name: 'id',
-        type: 'input',
+        type: 'number',
         message: 'Enter the employee\'s id',
+        validate: function(id) {
+            if (id) {
+              return true;
+            } else {
+              return 'Please enter the employee\'s id number';
+            }
+        }
     }, 
 
     //Employee choices
@@ -52,6 +74,7 @@ function setEmployeeType(answers) {
     let link = "";
     if (answers.employeeType ==="Engineer") {
         //
+
     } else if (answers.employeeType === "Intern") {
         //
     } else if (answers.employeeType === "Manager") {
