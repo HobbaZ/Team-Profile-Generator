@@ -8,6 +8,7 @@ const Employee = require('./lib/employee');
 const Engineer = require('./lib/engineer');
 const Intern = require('./lib/intern');
 const Manager = require('./lib/manager');
+const { Console } = require('console');
 
 const employeeTeam = [];
 
@@ -82,18 +83,18 @@ function teamOptions() {
         name: 'team',
         type: 'list',
         message: 'I would like to: ',
-        choices: ['Add an Engineer', 'Add a Intern', 'Confirm my team'],
+        choices: ['Add an Engineer', 'Add an Intern', 'Confirm my team'],
     },
     ])
 
     .then((answers) => {
         if(answers.team === 'Add an Engineer') {
             console.log('Engineer selected')
-            teamMemberInfo();
+            teamMemberInfo(answers.team);
             return;
-        } else if(answers.team === 'Add a intern') {
+        } else if(answers.team === 'Add an Intern') {
             console.log('Intern selected')
-            teamMemberInfo();
+            teamMemberInfo(answers.team);
             return;
         } else if(answers.team === 'Confirm my team') {
             confirmTeam();
@@ -107,19 +108,19 @@ function confirmTeam() {
     //send to generateHTML
 }
 
-function teamMemberInfo() {
+function teamMemberInfo(roleSelected) {
         inquirer.prompt([
 
     //Employee name
     {
         name: 'name',
         type: 'input',
-        message: 'Enter the employee\'s name',
+        message: `Enter the ${roleSelected.replace('Add an ', '')}\'s name`,
         validate: function(name) {
             if (name) {
               return true;
             } else {
-              return 'Please enter the employee\'s name';
+              return `Please enter the employee\'s name`;
             }
         }
     },
@@ -148,7 +149,7 @@ function teamMemberInfo() {
             if (id) {
               return true;
             } else {
-              return 'Please enter the employee\'s id number';
+              return `Please enter ${answers.name}\'s id number`;
             }
         }
     }, 
@@ -157,20 +158,32 @@ function teamMemberInfo() {
     {
         name: 'github',
         type: 'input',
-        message: (answers) => `${answers.name} is an ${answers.employeeType}, please enter their Github username`,
-        when: teamOptions(answers.team === 'Add an Engineer'),
+        message: (answers) => `Please enter ${answers.name}\'s Github username`,
+        when: roleSelected === 'Add an Engineer',
     },
 
     //Intern school
     {
         name: 'school',
         type: 'input',
-        message: (answers) => `${answers.name} is an ${answers.employeeType}, please enter the school they studied at`,
-        when: teamOptions(answers.team === 'Add a Intern'),
+        message: (answers) => `Please enter the school ${answers.name} studied at`,
+        when: roleSelected === 'Add an Intern',
     },
 
     ])
-    
+    //call teamOptions again
+    .then((answers) => {
+        if (roleSelected === 'Add an Intern') {
+        teamMember = new Intern(answers.name, answers.id,answers.email, answers.school);
+        }
+        else if (roleSelected === 'Add an Engineer') {
+        teamMember = new Engineer(answers.name, answers.id,answers.email, answers.github);
+        }
+
+        employeeTeam.push(teamMember)
+        console.log(`${teamMember.getRole()} added`)
+        teamOptions();
+    });
 };
 
 function createTeamData(answers) {
