@@ -8,7 +8,6 @@ const Employee = require('./lib/employee');
 const Engineer = require('./lib/engineer');
 const Intern = require('./lib/intern');
 const Manager = require('./lib/manager');
-const { Console } = require('console');
 
 const employeeTeam = [];
 
@@ -64,7 +63,7 @@ function initManager() {
     {
         name: 'officeNumber',
         type: 'input',
-        message: (answers) => `${answers.name} is the team manager, please enter their office Number`,
+        message: (answers) => `Please enter ${answers.name}\'s office number`,
     },
     ])
 
@@ -105,7 +104,20 @@ function teamOptions() {
 
 function confirmTeam() {
     console.log (`You have ${employeeTeam.length} member/s in your team`);
-    //send to generateHTML
+    //print team members
+    console.log('Your Team Consists Of: ')
+
+    employeeTeam.forEach(member => {
+        console.log(member);
+    })
+
+    console.log(`
+                                        Finished!
+  
+                              Successfully created team profile`
+    );
+    fs.writeFileSync('index.html', generateHTML(employeeTeam)), (err) => console.error(err);
+
 }
 
 function teamMemberInfo(roleSelected) {
@@ -186,64 +198,97 @@ function teamMemberInfo(roleSelected) {
     });
 };
 
-function createTeamData(answers) {
-    if (answers.employeeType === 'Engineer') {
-    const engineer = new Engineer(answers.name, answers.id,answers.email, answers.github);
-    console.log(engineer);
-    }
-    else if (answers.employeeType === 'Intern')  {
-    const intern = new Intern(answers.name, answers.id,answers.email, answers.school);
-    console.log(intern);
-    }
-    else if (answers.employeeType === 'Manager')  {
-    const manager = new Manager(answers.name, answers.id,answers.email, answers.officeNumber);
-    console.log(manager);
-    }
-    setTeam()
-};
-
-
-//const engineer = new Engineer(answers.name, answers.id,answers.email, getGithub(answers.github));
-//console.log(engineer.github);
-
-/*function setEmployeeType(answers) { 
-    if (answers.employeeType === "Engineer") {
-    const engineer = new Engineer(answers.name, answers.id,answers.email, getGithub(answers.github)); 
-    console.log(engineer)  
-    return engineer;  
-
-    } else if (answers.employeeType === "Intern") {
-        const intern = new Intern(answers.name, answers.id,answers.email, getSchool(answers.school));   
-        return intern;  
-    
-    } else if (answers.employeeType === "Manager") {
-        const manager = new Manager(answers.name, answers.id,answers.email, getOfficeNumber(answers.officeNumb));   
-        return manager;
-    }
-}*/
-
-/*const getSchool = () => {
-    return inquirer.prompt([
-//Github
-{
-    name: 'school',
-    type: 'input',
-    message: 'Enter the interns\'s school',
-    validate: function(school) {
-        if (school) {
-            return true;
-        } else {
-            return 'Please enter the employee\'s github username';
+function members(data) {
+    for (let index = 0; index < employeeTeam.length; index++) {
+        if (employeeTeam[index].getRole() === 'Engineer') {
+            data = `<div class="card mr-1 mt-1">
+            <div class="card-header">
+                <h2 class="card-title">${employeeTeam[index].getRole()}</h2>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    <li class="list-group-item">Name: ${employeeTeam[index].name}</li>
+                    <li class="list-group-item">Employment Id: ${employeeTeam[index].id}</li>
+                    <li class="list-group-item text-dark">Email: <a href="mailto:${employeeTeam[index].email}">${employeeTeam[index].email}</a></li>
+                    <li class="list-group-item text-dark">GitHub: <a href="https://github.com/${employeeTeam[index].github}" target="_blank">${employeeTeam[index].github}</a></li>
+                </ul>
+            </div>
+            </div>`
         }
+
+        if (employeeTeam[index].getRole() === 'Intern') {
+            data = `<div class="card mr-1 mt-1">
+            <div class="card-header">
+                <h2 class="card-title">${employeeTeam[index].getRole()}</h2>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    <li class="list-group-item">Name: ${employeeTeam[index].name}</li>
+                    <li class="list-group-item">Employment Id: ${employeeTeam[index].id}</li>
+                    <li class="list-group-item text-dark">Email: <a href="mailto:${employeeTeam[index].email}">${employeeTeam[index].email}</a></li>
+                    <li class="list-group-item text-dark">School: <${employeeTeam[index].school}</li>
+                </ul>
+            </div>
+            </div>`
+        }
+
+        if (employeeTeam[index].getRole() === 'Manager') {
+            data = `<div class="card">
+            <div class="card-body">
+                <h2 class="card-title">${employeeTeam[index].name}</h2>
+                <h6 class="card-subtitle mb-2 text-muted">${employeeTeam[index].getRole()}</h6>
+                <a href="mailto:${employeeTeam[index].email}" class="card-link">Email</a>
+                <ul class="list-group">
+                    <li class="list-group-item">Name: ${employeeTeam[index].name}</li>
+                    <li class="list-group-item">Employment Id: ${employeeTeam[index].id}</li>
+                    <li class="list-group-item text-dark">Email: <a href="mailto:${employeeTeam[index].email}">${employeeTeam[index].email}</a></li>
+
+                </ul>
+            </div>
+            </div>`
+        }        
     }
-},
-]);
+    return data;
 }
 
-const generateHTML = (answers) =>
-`
-`;
-*/
+const generateHTML = (employeeTeam) =>
+    `    <!DOCTYPE html>
+    <html lang="en-US">
+    
+      <head>
+        <meta charset="UTF-8">
+        <title>TEAM PROFILE GENERATOR</title>
+    
+        <!--bootstrap link-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    
+        <!--link reset css-->
+        <link rel="stylesheet" href="assets/css/reset.css" />
+
+        <!--icon kit link-->
+        <script src="https://kit.fontawesome.com/4b926c6456.js" crossorigin="anonymous"></script>
+    
+        <!--link css-->
+        <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
+      </head>
+    
+    <body>
+        <main>
+    <div class="container-fluid">
+        <div class="jumbotron jumbotron-fluid">
+            <h1>Team Profile</h1>
+        </div>
+
+        <div class= "row">
+        <div class="col-12" id="content">
+        ${members(employeeTeam)}
+        </div>
+        </div>
+    </div>
+    </main>
+    </body>
+</html>`
+;
 
 const init = () => {
     console.log(`
@@ -253,14 +298,6 @@ const init = () => {
                     
                     `)
       initManager()
-        //.then((answers) => writeFileAsync('index.html', generateHTML(answers)))
-        /*.then(() => console.log(`
-                                        Finished!
-  
-                              Successfully created team profile
-        `))
-        .catch((err) => console.error(err));*/
-    };
-  
-    
-    init();
+};
+ 
+init();
