@@ -3,18 +3,112 @@ const inquirer = require('inquirer');
 const fs = require('fs');
 const util = require('util');
 
-const generateHTML = require('./dist/generateHTML.js');
-const employee = require('./lib/employee');
-const engineer = require('./lib/engineer');
-const intern = require('./lib/intern');
-const manager = require('./lib/manager');
+//const generateHTML = require('./dist/generateHTML.js');
+const Employee = require('./lib/employee');
+const Engineer = require('./lib/engineer');
+const Intern = require('./lib/intern');
+const Manager = require('./lib/manager');
 
-const employees = [];
+const employeeTeam = [];
 
 const writeFileAsync = util.promisify(fs.writeFile);
 
-const promptUser = () => {
-    return inquirer.prompt([
+//Need to start prompts with manager
+function initManager() {
+    inquirer.prompt([
+        //Employee name
+    {
+        name: 'name',
+        type: 'input',
+        message: 'Enter the team manager\'s name',
+        validate: function(name) {
+            if (name) {
+              return true;
+            } else {
+              return 'Please enter the team manager\'s name';
+            }
+        }
+    },
+
+     //Employee email
+     {
+        name: 'email',
+        type: 'input',
+        message: (answers) => `Enter the team manager ${answers.name}\'s email address`,
+        validate: function(email) {
+            let test = email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/); //regex from https://www.w3resource.com/javascript/form/email-validation.php
+            if (test) {
+              return true;
+            } else {
+              return 'Please enter a valid email address.';
+            }
+        }
+    }, 
+
+    //Employee id
+    {
+        name: 'id',
+        type: 'number',
+        message: (answers) => `Enter ${answers.name}\'s id number`,
+        validate: function(id) {
+            if (id) {
+              return true;
+            } else {
+              return 'Please enter the employee\'s id number';
+            }
+        }
+    }, 
+
+    //Manager office number
+    {
+        name: 'officeNumber',
+        type: 'input',
+        message: (answers) => `${answers.name} is the team manager, please enter their office Number`,
+    },
+    ])
+
+    .then((answers) => {
+        const manager = new Manager(answers.name, answers.id ,answers.email, answers.officeNumber);
+        employeeTeam.push(manager);
+        teamOptions();
+    });
+}
+
+//options to add intern or engineer to team or confirm tean
+function teamOptions() {
+    inquirer.prompt([
+    //Manager office number
+    {
+        name: 'team',
+        type: 'list',
+        message: 'I would like to: ',
+        choices: ['Add an Engineer', 'Add a Intern', 'Confirm my team'],
+    },
+    ])
+
+    .then((answers) => {
+        if(answers.team === 'Add an Engineer') {
+            console.log('Engineer selected')
+            teamMemberInfo();
+            return;
+        } else if(answers.team === 'Add a intern') {
+            console.log('Intern selected')
+            teamMemberInfo();
+            return;
+        } else if(answers.team === 'Confirm my team') {
+            confirmTeam();
+            return;
+        }
+    });
+};
+
+function confirmTeam() {
+    console.log (`You have ${employeeTeam.length} member/s in your team`);
+    //send to generateHTML
+}
+
+function teamMemberInfo() {
+        inquirer.prompt([
 
     //Employee name
     {
@@ -34,7 +128,7 @@ const promptUser = () => {
     {
         name: 'email',
         type: 'input',
-        message: 'Enter the employee\'s email',
+        message: (answers) => `Enter ${answers.name}\'s email`,
         validate: function(email) {
             let test = email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/); //regex from https://www.w3resource.com/javascript/form/email-validation.php
             if (test) {
@@ -49,7 +143,7 @@ const promptUser = () => {
     {
         name: 'id',
         type: 'number',
-        message: 'Enter the employee\'s id',
+        message: (answers) => `Enter ${answers.name}\'s id number`,
         validate: function(id) {
             if (id) {
               return true;
@@ -59,45 +153,100 @@ const promptUser = () => {
         }
     }, 
 
-    //Employee choices
+    //Engineer github
     {
-        name: 'employeeType',
-        type: 'list',
-        message: 'What is the employee type?',
-        choices: ['Engineer', 'Intern', 'Manager'],
+        name: 'github',
+        type: 'input',
+        message: (answers) => `${answers.name} is an ${answers.employeeType}, please enter their Github username`,
+        when: teamOptions(answers.team === 'Add an Engineer'),
     },
 
-    ]);
+    //Intern school
+    {
+        name: 'school',
+        type: 'input',
+        message: (answers) => `${answers.name} is an ${answers.employeeType}, please enter the school they studied at`,
+        when: teamOptions(answers.team === 'Add a Intern'),
+    },
+
+    ])
+    
 };
 
-function setEmployeeType(answers) {
-    let link = "";
-    if (answers.employeeType ==="Engineer") {
-        //
+function createTeamData(answers) {
+    if (answers.employeeType === 'Engineer') {
+    const engineer = new Engineer(answers.name, answers.id,answers.email, answers.github);
+    console.log(engineer);
+    }
+    else if (answers.employeeType === 'Intern')  {
+    const intern = new Intern(answers.name, answers.id,answers.email, answers.school);
+    console.log(intern);
+    }
+    else if (answers.employeeType === 'Manager')  {
+    const manager = new Manager(answers.name, answers.id,answers.email, answers.officeNumber);
+    console.log(manager);
+    }
+    setTeam()
+};
+
+
+//const engineer = new Engineer(answers.name, answers.id,answers.email, getGithub(answers.github));
+//console.log(engineer.github);
+
+/*function setEmployeeType(answers) { 
+    if (answers.employeeType === "Engineer") {
+    const engineer = new Engineer(answers.name, answers.id,answers.email, getGithub(answers.github)); 
+    console.log(engineer)  
+    return engineer;  
 
     } else if (answers.employeeType === "Intern") {
-        //
+        const intern = new Intern(answers.name, answers.id,answers.email, getSchool(answers.school));   
+        return intern;  
+    
     } else if (answers.employeeType === "Manager") {
-        //
+        const manager = new Manager(answers.name, answers.id,answers.email, getOfficeNumber(answers.officeNumb));   
+        return manager;
     }
-    return link;
+}*/
+
+/*const getSchool = () => {
+    return inquirer.prompt([
+//Github
+{
+    name: 'school',
+    type: 'input',
+    message: 'Enter the interns\'s school',
+    validate: function(school) {
+        if (school) {
+            return true;
+        } else {
+            return 'Please enter the employee\'s github username';
+        }
+    }
+},
+]);
 }
 
-function init() {
+const generateHTML = (answers) =>
+`
+`;
+*/
+
+const init = () => {
     console.log(`
                 ____________________TEAM PROFILE GENERATOR______________________
   
                     Follow the prompts to generate a team profile
                     
                     `)
-      promptUser()
-        .then((answers) => writeFileAsync('index.html', generateHTML(data)))
-        .then(() => console.log(`
+      initManager()
+        //.then((answers) => writeFileAsync('index.html', generateHTML(answers)))
+        /*.then(() => console.log(`
                                         Finished!
   
                               Successfully created team profile
         `))
-        .catch((err) => console.error(err));
+        .catch((err) => console.error(err));*/
     };
   
     
