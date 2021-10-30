@@ -1,0 +1,17 @@
+.jumbotron {
+    background-color: brown;
+    text-align: center;
+    font-size: 40px;
+    color: wheat;
+}
+
+.card {
+    text-align: center;
+    justify-content: space-around;
+    border: black 5px solid;
+}
+
+.card-title {
+    color: darkslategray;
+    font-size: 25px;
+}

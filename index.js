@@ -11,7 +11,7 @@ const Manager = require('./lib/manager');
 
 const employeeTeam = [];
 
-const writeFileAsync = util.promisify(fs.writeFile);
+//const writeFileAsync = util.promisify(fs.writeFile);
 
 //Need to start prompts with manager
 function initManager() {
@@ -198,55 +198,52 @@ function teamMemberInfo(roleSelected) {
     });
 };
 
-function members(data) {
+function getIcon() {
+    let icon = '';
     for (let index = 0; index < employeeTeam.length; index++) {
-        if (employeeTeam[index].getRole() === 'Engineer') {
-            data = `<div class="card mr-1 mt-1">
-            <div class="card-header">
-                <h2 class="card-title">${employeeTeam[index].getRole()}</h2>
-            </div>
+    if (employeeTeam[index].getRole() === 'Engineer') {
+    icon = `<i class="fas fa-laptop-code"></i>`
+}
+
+if (employeeTeam[index].getRole() === 'Manager') {
+    icon = `<i class="fas fa-users"></i>`
+}
+
+if (employeeTeam[index].getRole() === 'Intern') {
+    icon = `<i class="fas fa-user-circle"></i>`
+}
+}
+return icon;
+}
+    
+
+function members(employeeTeam) {
+    let data= '';
+    for (let index = 0; index < employeeTeam.length; index++) {
+
+        data += `<div class="col-sm-6 col-lg-4">
+        <div class="card mx-1 mb-2 mt-2">
             <div class="card-body">
+                <h1 class="card-title">${employeeTeam[index].name}</h1>
+                <h6 class="card-subtitle mb-2 text-muted">${getIcon()} ${employeeTeam[index].getRole()}</h6>
                 <ul class="list-group">
-                    <li class="list-group-item">Name: ${employeeTeam[index].name}</li>
-                    <li class="list-group-item">Employment Id: ${employeeTeam[index].id}</li>
-                    <li class="list-group-item text-dark">Email: <a href="mailto:${employeeTeam[index].email}">${employeeTeam[index].email}</a></li>
-                    <li class="list-group-item text-dark">GitHub: <a href="https://github.com/${employeeTeam[index].github}" target="_blank">${employeeTeam[index].github}</a></li>
-                </ul>
+                    <li class="list-group-item"><i class="fas fa-id-card-alt"></i> Employment ID: ${employeeTeam[index].id}</li>
+                    <li class="list-group-item"><i class="far fa-envelope"></i> Email: <a href="mailto:${employeeTeam[index].email}">${employeeTeam[index].email}</a></li>`
+
+                    if (employeeTeam[index].getRole() === 'Engineer') {
+                    data +=`<li class="list-group-item"><i class="fab fa-github"></i> GitHub: <a href="https://github.com/${employeeTeam[index].github}" target="_blank">${employeeTeam[index].github}</a></li>`
+                    }
+                    if (employeeTeam[index].getRole() === 'Intern') {
+                    data +=`<li class="list-group-item"><i class="fas fa-graduation-cap"></i> School: ${employeeTeam[index].school}</li>`
+                    }
+                    if (employeeTeam[index].getRole() === 'Manager') {
+                    data +=`<li class="list-group-item"><i class="fas fa-phone-alt"></i> Office Number: ${employeeTeam[index].officeNumber}</li>`
+                    }
+
+            data += `</ul>
+            </div>
             </div>
             </div>`
-        }
-
-        if (employeeTeam[index].getRole() === 'Intern') {
-            data = `<div class="card mr-1 mt-1">
-            <div class="card-header">
-                <h2 class="card-title">${employeeTeam[index].getRole()}</h2>
-            </div>
-            <div class="card-body">
-                <ul class="list-group">
-                    <li class="list-group-item">Name: ${employeeTeam[index].name}</li>
-                    <li class="list-group-item">Employment Id: ${employeeTeam[index].id}</li>
-                    <li class="list-group-item text-dark">Email: <a href="mailto:${employeeTeam[index].email}">${employeeTeam[index].email}</a></li>
-                    <li class="list-group-item text-dark">School: <${employeeTeam[index].school}</li>
-                </ul>
-            </div>
-            </div>`
-        }
-
-        if (employeeTeam[index].getRole() === 'Manager') {
-            data = `<div class="card">
-            <div class="card-body">
-                <h2 class="card-title">${employeeTeam[index].name}</h2>
-                <h6 class="card-subtitle mb-2 text-muted">${employeeTeam[index].getRole()}</h6>
-                <a href="mailto:${employeeTeam[index].email}" class="card-link">Email</a>
-                <ul class="list-group">
-                    <li class="list-group-item">Name: ${employeeTeam[index].name}</li>
-                    <li class="list-group-item">Employment Id: ${employeeTeam[index].id}</li>
-                    <li class="list-group-item text-dark">Email: <a href="mailto:${employeeTeam[index].email}">${employeeTeam[index].email}</a></li>
-
-                </ul>
-            </div>
-            </div>`
-        }        
     }
     return data;
 }
@@ -263,26 +260,26 @@ const generateHTML = (employeeTeam) =>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     
         <!--link reset css-->
-        <link rel="stylesheet" href="assets/css/reset.css" />
+        <link rel="stylesheet" href="./dist/reset.css" />
 
         <!--icon kit link-->
         <script src="https://kit.fontawesome.com/4b926c6456.js" crossorigin="anonymous"></script>
     
         <!--link css-->
-        <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
+        <link rel="stylesheet" type="text/css" href="./dist/style.css">
       </head>
     
     <body>
-        <main>
-    <div class="container-fluid">
-        <div class="jumbotron jumbotron-fluid">
-            <h1>Team Profile</h1>
-        </div>
 
+        
+        <header class="jumbotron">
+        <h1 class="display-3">Team Profile Generator</h1>
+        </header>
+
+        <main>
+    <div class="container">
         <div class= "row">
-        <div class="col-12" id="content">
         ${members(employeeTeam)}
-        </div>
         </div>
     </div>
     </main>
