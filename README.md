@@ -59,9 +59,9 @@ WHEN I decide to finish building my team
 THEN I exit the application, and the HTML is generated
 
 ## Screenshots
-![Prompts screen](./assets/images/prompts.png)
+![Prompts screen](./assets/images/prompts.PNG)
 
-![Finish prompts screen](./assets/images/promptsFinish.png)
+![Finish prompts screen](./assets/images/promptsFinish.PNG)
 
 ![completed app](./assets/images/fullWebpage.png)
 
