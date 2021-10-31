@@ -1,17 +1,12 @@
 //Get all needed requirements
 const inquirer = require('inquirer');
 const fs = require('fs');
-const util = require('util');
 
-//const generateHTML = require('./dist/generateHTML.js');
-const Employee = require('./lib/employee');
 const Engineer = require('./lib/engineer');
 const Intern = require('./lib/intern');
 const Manager = require('./lib/manager');
 
 const employeeTeam = [];
-
-//const writeFileAsync = util.promisify(fs.writeFile);
 
 //Need to start prompts with manager
 function initManager() {
