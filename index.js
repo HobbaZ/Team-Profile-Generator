@@ -198,34 +198,32 @@ function teamMemberInfo(roleSelected) {
     });
 };
 
-function getIcon() {
-    let icon = '';
-    for (let index = 0; index < employeeTeam.length; index++) {
-    if (employeeTeam[index].getRole() === 'Engineer') {
-    icon = `<i class="fas fa-laptop-code"></i>`
-}
-
-if (employeeTeam[index].getRole() === 'Manager') {
-    icon = `<i class="fas fa-users"></i>`
-}
-
-if (employeeTeam[index].getRole() === 'Intern') {
-    icon = `<i class="fas fa-user-circle"></i>`
-}
-}
-return icon;
-}
-    
-
 function members(employeeTeam) {
     let data= '';
     for (let index = 0; index < employeeTeam.length; index++) {
 
         data += `<div class="col-sm-6 col-lg-4">
         <div class="card mx-1 mb-2 mt-2">
-            <div class="card-body">
+        <div class="card-header">
                 <h1 class="card-title">${employeeTeam[index].name}</h1>
-                <h6 class="card-subtitle mb-2 text-muted">${getIcon()} ${employeeTeam[index].getRole()}</h6>
+                <h6 class="card-subtitle mb-2">`
+                
+                if (employeeTeam[index].getRole() ==='Engineer') {
+                data += `<i class="fas fa-laptop-code"></i>`
+                }
+
+                if (employeeTeam[index].getRole() === 'Manager') {
+                    data += `<i class="fas fa-users"></i>`
+                }
+
+                if (employeeTeam[index].getRole() === 'Intern') {
+                    data += `<i class="fas fa-user-circle"></i> `
+                }
+
+                data += `   ${employeeTeam[index].getRole()}</h6>
+                </div>
+                <div class="card-body">
+
                 <ul class="list-group">
                     <li class="list-group-item"><i class="fas fa-id-card-alt"></i> Employment ID: ${employeeTeam[index].id}</li>
                     <li class="list-group-item"><i class="far fa-envelope"></i> Email: <a href="mailto:${employeeTeam[index].email}">${employeeTeam[index].email}</a></li>`
@@ -265,6 +263,11 @@ const generateHTML = (employeeTeam) =>
         <!--icon kit link-->
         <script src="https://kit.fontawesome.com/4b926c6456.js" crossorigin="anonymous"></script>
     
+        <!--Google Fonts Link-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
+
         <!--link css-->
         <link rel="stylesheet" type="text/css" href="./dist/style.css">
       </head>
@@ -283,6 +286,8 @@ const generateHTML = (employeeTeam) =>
         </div>
     </div>
     </main>
+
+    <footer>Zac Hobba 2021</footer>
     </body>
 </html>`
 ;
