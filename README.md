@@ -3,7 +3,11 @@
 ## Description
 <h3>Project Aim</h3>
 The aim of this project was to create a Team Profile Generator that takes input from inquirer prompts to generate a HTML page of your team members.
-You can [view it here](https://github.com/HobbaZ/Team-Profile-Generator)
+
+You can view the [website link](https://github.com/HobbaZ/Team-Profile-Generator) here
+
+Or view the [walkthrough video](https://youtu.be/1sRHl2PvbLU) here.
+
 <h3>What Problem Does It Solve</h3>
 The generator enables you to display your entered team details on a web page.
 <h3>What I Learnt</h3>
@@ -11,11 +15,10 @@ in making this project, I expanded my knowledge on string literals, inquirer and
 
 ## Table of Contents
 - [Description](#description)
-- [User Story](#userstory)
+- [User Story](#user-story)
 - [Screenshots](#screenshots)
 - [Installation](#installation)
 - [Features](#features)
-- [Usage](#usage)
 - [Technology](#technology)
 - [Contributors](#contributors)
 - [Acknowledgements](#acknowledgements)

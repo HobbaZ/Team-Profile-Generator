@@ -111,7 +111,7 @@ function confirmTeam() {
   
                               Successfully created team profile`
     );
-    fs.writeFileSync('index.html', generateHTML(employeeTeam)), (err) => console.error(err);
+    fs.writeFileSync('example-index.html', generateHTML(employeeTeam)), (err) => console.error(err);
 
 }
 
