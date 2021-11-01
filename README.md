@@ -66,6 +66,8 @@ THEN I exit the application, and the HTML is generated
 
 ![Finish prompts screen](./assets/images/promptsFinish.PNG)
 
+![Passed tests](./assets/images/tests.PNG)
+
 ![completed app](./assets/images/fullWebpage.png)
 
 ## Installation
