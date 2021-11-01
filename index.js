@@ -57,8 +57,15 @@ function initManager() {
     //Manager office number
     {
         name: 'officeNumber',
-        type: 'input',
-        message: (answers) => `Please enter ${answers.name}\'s office number`,
+        type: 'number',
+        message: (answers) => `Please enter ${answers.name}\'s office phone number`,
+        validate: function(officeNumb) {
+            if (officeNumb) {
+              return true;
+            } else {
+              return 'Please enter the manager\'s office phone number number';
+            }
+        }
     },
     ])
 
